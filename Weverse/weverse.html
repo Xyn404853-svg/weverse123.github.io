@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weverse · By Your Side, Beyond the Stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+      color: #f5f5f5;
+      line-height: 1.6;
+      background-image: url("Blackpink.png");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+    /* ✅ 这里只改了模糊和透明度：更清晰但仍朦胧 */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 20, 0.55); /* 变暗一点，更有质感 */
+      backdrop-filter: blur(4px); /* 模糊从8px降到4px，能看清人物 */
+      z-index: -1;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: 90%; max-width: 1120px; margin: 0 auto; }
+    section { padding: 60px 0; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5,8,20,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #56e6ff;
+    }
+    .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #56e6ff; }
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 14px;
+      color: #c9d1ff;
+    }
+    .nav-links a:hover { color: #ffffff; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#00e0ff,#8a7bff);
+      color: #050814;
+      font-weight: 600;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-outline {
+      background: transparent;
+      border-color: rgba(255,255,255,0.25);
+      color: #e2e8f0;
+    }
+    .btn-outline:hover {
+      border-color: #56e6ff;
+      color: #ffffff;
+    }
+    .lang-switch {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 12px;
+      color: #a0aec0;
+    }
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg,#ffffff,#89f7ff,#cf9bff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 16px;
+      color: #c9d1ff;
+      max-width: 420px;
+      margin-bottom: 24px;
+    }
+    .hero-cta { display: flex; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(86,230,255,0.08);
+      border: 1px solid rgba(86,230,255,0.2);
+      color: #9ae6ff;
+    }
+    .hero-right {
+      padding: 18px;
+      border-radius: 24px;
+      background: url("newjeans.png") no-repeat center center;
+      background-size: cover;
+      position: relative;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 24px;
+      z-index: 0;
+    }
+    .hero-phone-header, .hero-card {
+      position: relative;
+      z-index: 1;
+    }
+    .hero-phone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #a0aec0;
+    }
+    .hero-card {
+      background: rgba(5,8,20,0.9);
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .hero-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .hero-card-text {
+      font-size: 13px;
+      color: #cbd5f5;
+      margin-bottom: 4px;
+    }
+    .hero-card-meta {
+      font-size: 11px;
+      color: #718096;
+    }
+    .highlights {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+    }
+    .highlight-card {
+      background: radial-gradient(circle at top,#151633,#050814);
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .highlight-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #e5e7ff;
+    }
+    .highlight-desc {
+      font-size: 12px;
+      color: #a0aec0;
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: #a0aec0;
+      margin-bottom: 24px;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 24px;
+    }
+    .card {
+      background: radial-gradient(circle at top,#151633,#050814);
+      border-radius: 18px;
+      padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(86,230,255,0.1);
+      color: #9ae6ff;
+    }
+    .feed-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-meta {
+      font-size: 11px;
+      color: #718096;
+      margin-bottom: 4px;
+    }
+    .feed-title {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .feed-text {
+      font-size: 12px;
+      color: #cbd5f5;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 20px;
+    }
+    .cta-card {
+      background: radial-gradient(circle at top,#161b41,#050814);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+    }
+    .cta-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .cta-card p { font-size: 13px; color: #a0aec0; margin-bottom: 12px; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .tab {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      color: #a0aec0;
+    }
+    .tab.active {
+      background: linear-gradient(135deg,#00e0ff,#8a7bff);
+      border-color: transparent;
+      color: #050814;
+      font-weight: 600;
+    }
+    .activity-list { display: grid; gap: 12px; }
+    .activity-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,255,0.25);
+      font-size: 13px;
+    }
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(138,129,255,0.15);
+      color: #e5e7ff;
+    }
+    .progress-bar {
+      margin-top: 6px;
+      height: 6px;
+      background: rgba(45,55,72,0.9);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-inner {
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg,#00e0ff,#8a7bff);
+    }
+    .task-list { display: grid; gap: 10px; font-size: 13px; }
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0,1fr);
+      gap: 20px;
+    }
+    .filter-title { font-size: 13px; margin-bottom: 8px; color: #a0aec0; }
+    .filter-group { margin-bottom: 14px; }
+    .filter-label {
+      font-size: 12px;
+      color: #a0aec0;
+      margin-bottom: 4px;
+    }
+    .filter-pill {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 11px;
+      cursor: pointer;
+      color: #cbd5f5;
+    }
+    .filter-pill.active {
+      background: rgba(86,230,255,0.18);
+      border-color: #56e6ff;
+      color: #e6f9ff;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+    }
+    .product-card {
+      background: rgba(15,23,42,0.9);
+      border-radius: 14px;
+      padding: 10px 11px;
+      border: 1px solid rgba(148,163,255,0.25);
+      font-size: 12px;
+    }
+    .product-title { margin: 6px 0 2px; }
+    .product-price { color: #9ae6ff; font-weight: 600; font-size: 13px; }
+    .product-meta { color: #718096; font-size: 11px; }
+    .event-layout {
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+      gap: 20px;
+    }
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .popup {
+      width: 300px;
+      background: radial-gradient(circle at top,#2d1b50,#050814);
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      font-size: 13px;
+      position: relative;
+    }
+    .popup-close {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      color: #cbd5f5;
+    }
+    .popup-tag {
+      font-size: 11px;
+      color: #9ae6ff;
+      margin-bottom: 6px;
+    }
+    .popup-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .popup-subtitle {
+      font-size: 12px;
+      color: #e2e8f0;
+      margin-bottom: 12px;
+    }
+    .popup-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 10px;
+      color: #a0aec0;
+    }
+    footer {
+      padding: 24px 0 30px;
+      font-size: 11px;
+      color: #718096;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 40px;
+    }
+    @media (max-width: 960px) {
+      .hero-inner,
+      .dashboard,
+      .shop-layout,
+      .event-layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+      .hero { padding-top: 20px; }
+      .hero-right { margin-top: 10px; }
+      .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .grid-3 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .highlights { grid-template-columns: minmax(0,1fr); }
+      .product-grid { grid-template-columns: minmax(0,1fr); }
+      .grid-3 { grid-template-columns: minmax(0,1fr); }
+      section { padding: 40px 0; }
+      .hero-title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <span>Weverse</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#community">Community</a>
+      <a href="#fandom">Fandom Hub</a>
+      <a href="#shop">Weverse Shop</a>
+      <a href="#events">Event Calendar</a>
+      <a href="#help">Help Center</a>
+    </nav>
+    <div class="nav-right">
+      <a class="lang-switch" href="cn.html">EN / 中文</a>
+      <button class="btn btn-outline">Log in</button>
+      <button class="btn btn-primary">Sign up</button>
+    </div>
+  </div>
+</header>
+
+<section id="home" class="hero">
+  <div class="container hero-inner">
+    <div>
+      <h1 class="hero-title">By Your Side, Beyond the Stage</h1>
+      <p class="hero-subtitle">
+        For fans in Hong Kong and Mainland China, we rebuild Weverse’s web experience with clearer navigation, localized schedules, and more playful everyday interactions.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary">Enter Fandom Hub</button>
+        <button class="btn btn-outline">View June Event Calendar</button>
+      </div>
+      <div class="hero-badges">
+        <div class="badge">Unified fandom interaction entry</div>
+        <div class="badge">Localized time display</div>
+        <div class="badge">Improved Weverse Shop experience</div>
+      </div>
+      <div class="highlights">
+        <div class="highlight-card">
+          <div class="highlight-title">Clear information architecture</div>
+          <div class="highlight-desc">
+            Community, events, shop and support are brought together in the top navigation and homepage cards, fixing scattered entry points.
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-title">Localized time and language</div>
+          <div class="highlight-desc">
+            Event times are shown by default in HKT / Beijing Time, with English and Chinese interface switching.
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-title">Everyday interaction, not one-off events</div>
+          <div class="highlight-desc">
+            Missions, badges and fan-made content galleries turn fandom into a daily habit instead of only peaking during comebacks.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-phone-header">
+        <span>June · HK / Mainland Special Campaign</span>
+        <span>Fandom Highlights</span>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-title">This month’s focus: Online + offline support</div>
+        <div class="hero-card-text">
+          · 10–20 June: New song charting challenge (earn digital badges)<br/>
+          · 18 June: Hong Kong special fan support event (RSVP via Fandom Hub)<br/>
+          · 25 June: Global “Weverse Fan Day” live stream with localized time display.
+        </div>
+        <div class="hero-card-meta">
+          Fans can check detailed rules in the Fandom Hub and jump to Weverse Shop directly from the homepage to purchase related merchandise.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="community">
+  <div class="container">
+    <h2 class="section-title">My Weverse Home</h2>
+    <p class="section-subtitle">
+      Once logged in, fans see a personalized homefeed based on followed artists and region, so the most important updates never get buried.
+    </p>
+    <div class="dashboard">
+      <div class="card">
+        <div class="card-header">
+          <span>Latest updates from artists I follow</span>
+          <span class="pill">Prioritized by my follows</span>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">BTS · Official · 5 min ago · Notice</div>
+          <div class="feed-title">[Schedule] Hong Kong special fan event teaser</div>
+          <div class="feed-text">
+            Automatically converted to your timezone: Wed, 18 June, 19:30 (HKT).
+            Offline event and online live stream will be held simultaneously.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">NewJeans · Community · 23 min ago</div>
+          <div class="feed-title">[Selfie] June practice room moments ✨</div>
+          <div class="feed-text">
+            “It’s so hot these days, but thinking about the stage and you gives us energy!”
+            — tap to view full post.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">Platform topic · Trending · #JuneCheck-in</div>
+          <div class="feed-title">June activities overview</div>
+          <div class="feed-text">
+            A curated list of all key live streams, offline events and support projects this month, filtered by artist and date.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span>Today’s highlights · in your local time</span>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">Tonight 20:00 · XX comeback countdown live</div>
+          <div class="feed-text">
+            Join 10 minutes early to count down with fans worldwide.<br/>
+            We recommend combining this with the “charting challenge” mission in the Fandom Hub.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">This week’s mission progress</div>
+          <div class="feed-text">
+            · Join 3 discussions (2/3)<br/>
+            · Complete 1 voting support (0/1)<br/>
+            Finish to unlock this week’s limited badge.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">What fans are talking about</div>
+          <div class="feed-text">
+            #JuneChartingList #HKChantProject #FanDayOutfits
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding: 0; background: none; overflow: hidden;">
+        <img src="Cortis.png" alt="Cortis.png Spotlight" style="width: 100%; height: 100%; object-fit: cover; border-radius: 18px;">
+      </div>
+    </div>
+
+    <section style="padding-top:40px;">
+      <h3 class="section-title" style="font-size:20px;">All key entries in one place</h3>
+      <p class="section-subtitle">
+        To fix the previous scattered entry points, we add three clear cards in the middle of the homepage.
+      </p>
+      <div class="grid-3">
+        <div class="cta-card">
+          <div>
+            <h3>Community feed</h3>
+            <p>Real-time official updates and fan posts, ordered by the artists and topics you care about.</p>
+          </div>
+          <button class="btn btn-outline">Enter community</button>
+        </div>
+        <div class="cta-card">
+          <div>
+            <h3>Fandom Hub</h3>
+            <p>Voting, support projects, missions and fan-made content, all accessible via a single entry point.</p>
+          </div>
+          <button class="btn btn-outline">Join fandom hub</button>
+        </div>
+        <div class="cta-card">
+          <div>
+            <h3>Weverse Shop</h3>
+            <p>Official merch, digital items and limited drops, with HK/Mainland shipping and local currency display.</p>
+          </div>
+          <button class="btn btn-outline">Go shopping</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<section id="fandom">
+  <div class="container">
+    <h2 class="section-title">Fandom Hub</h2>
+    <p class="section-subtitle">
+      A centralized space for support projects, voting, missions and fan creations, designed to make participation simple and rewarding.
+    </p>
+    <div class="tabs">
+      <div class="tab active">Support & Voting</div>
+      <div class="tab">Missions & Badges</div>
+      <div class="tab">Fan Creations</div>
+    </div>
+    <div class="dashboard">
+      <div class="card">
+        <div class="card-header">
+          <span>Ongoing support projects</span>
+          <span style="font-size:11px;color:#a0aec0;">Prioritized for HK / Mainland</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-card">
+            <div class="activity-header">
+              <div>
+                <div style="font-weight:600;">XX comeback music show support</div>
+                <div class="feed-meta">Goal: In-show support + outdoor ad placement</div>
+              </div>
+              <span class="tag">Ongoing · 7 days left</span>
+            </div>
+            <div class="feed-text">
+              Fans contribute points by completing charting tasks, sharing the project and joining discussions.
+              Progress is updated in real time.
+            </div>
+            <div class="progress-bar">
+              <div class="progress-inner"></div>
+            </div>
+            <div class="feed-meta" style="margin-top:4px;">Progress: 68% · 12,430 fans participating</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-header">
+              <div>
+                <div style="font-weight:600;">Hong Kong show support plan voting</div>
+                <div class="feed-meta">Choose your favorite support format</div>
+              </div>
+              <span class="tag">Voting · 2 days left</span>
+            </div>
+            <div class="feed-text">
+              A. Lightstick ocean · B. Slogan banners · C. Chant relay.
+              The final plan will directly shape the on-site experience.
+            </div>
+            <button class="btn btn-primary" style="margin-top:10px;padding:6px 14px;font-size:12px;">
+              Vote now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span>Missions & badges</span>
+        </div>
+        <div class="task-list">
+          <div>
+            <div class="feed-title">Weekly community mission</div>
+            <div class="feed-text">
+              · Join 3 discussions<br/>
+              · Like 10 posts from other fans<br/>
+              Unlock the “June Chatroom” badge upon completion.
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">Live interaction mission</div>
+            <div class="feed-text">
+              Post at least 5 comments during the next live stream to earn the “Live Supporter” badge and level up your fan profile.
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">Fan art challenge</div>
+            <div class="feed-text">
+              Upload your posters, illustrations or videos for a chance to be featured on the homepage Fan Creations wall and be reshared by official accounts.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="shop">
+  <div class="container">
+    <h2 class="section-title">Weverse Shop · Official Store</h2>
+    <p class="section-subtitle">
+      The new layout fixes unclear entry points and messy browsing by introducing clear filters and localized information.
+    </p>
+    <div class="shop-layout">
+      <div class="card">
+        <div class="filter-title">Filters & navigation</div>
+        <div class="filter-group">
+          <div class="filter-label">Artist</div>
+          <div>
+            <span class="filter-pill active">All</span>
+            <span class="filter-pill">BTS</span>
+            <span class="filter-pill">NewJeans</span>
+            <span class="filter-pill">SEVENTEEN</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Category</div>
+          <div>
+            <span class="filter-pill">Albums</span>
+            <span class="filter-pill">Photobooks</span>
+            <span class="filter-pill active">Merch</span>
+            <span class="filter-pill">Apparel</span>
+            <span class="filter-pill">Digital</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Price range</div>
+          <div>
+            <span class="filter-pill">$0 - $199</span>
+            <span class="filter-pill active">$200 - $499</span>
+            <span class="filter-pill">$500+</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Shipping region</div>
+          <div>
+            <span class="filter-pill active">Hong Kong</span>
+            <span class="filter-pill">Mainland China</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#a0aec0;margin-top:6px;">
+          Prices are automatically converted to HKD / CNY according to your region settings.
+        </p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header" style="margin-bottom:0;">
+            <span>Recommended for you</span>
+            <span style="font-size:11px;color:#a0aec0;">Based on followed artists + region</span>
+          </div>
+        </div>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="tag" style="display:inline-block;margin-bottom:4px;">Limited</div>
+            <div class="product-title">XX concert official lightstick (HK limited)</div>
+            <div class="product-price">HKD 299</div>
+            <div class="product-meta">
+              In stock · Estimated delivery in 3–5 business days
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-title">NewJeans new album photo set</div>
+            <div class="product-price">HKD 420</div>
+            <div class="product-meta">
+              Includes random photocard · Pre-order, shipping in July
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="tag" style="display:inline-block;margin-bottom:4px;">Recommended</div>
+            <div class="product-title">June support kit (banner + stickers)</div>
+            <div class="product-price">HKD 180</div>
+            <div class="product-meta">
+              Designed for the “June support challenge”; mission completion unlocks additional discounts.
+            </div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#718096;margin-top:10px;">
+          Related events like fansigns or offline support meetups are displayed in the Event Calendar page.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="events">
+  <div class="container">
+    <h2 class="section-title">June Event Calendar</h2>
+    <p class="section-subtitle">
+      Instead of scattered notices, key events are consolidated into a single calendar view, sorted by date and artist, and shown in local time.
+    </p>
+    <div class="event-layout">
+      <div class="card">
+        <div class="card-header">
+          <span>Key dates (HKT / Beijing Time)</span>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">10–20 June · New song charting challenge</div>
+          <div class="feed-text">
+            Join daily missions in the Fandom Hub to boost digital chart scores. Completion grants limited June badges and discount codes in Weverse Shop.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">18 June · Hong Kong special fan event</div>
+          <div class="feed-text">
+            Offline support event in Hong Kong with synchronized live stream for Mainland fans.
+            Details and RSVP are handled via the Fandom Hub.
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">25 June · Global Weverse Fan Day live</div>
+          <div class="feed-text">
+            A platform-wide fan celebration live stream, with segments tailored to different regions and languages.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span>How this calendar fixes UX issues</span>
+        </div>
+        <div class="task-list">
+          <div>
+            <div class="feed-title">From scattered to centralized</div>
+            <div class="feed-text">
+              Previously, key dates were scattered across different artist pages and posts.
+              The new calendar page consolidates everything for easier planning.
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">Localized time by default</div>
+            <div class="feed-text">
+              Events are shown in HKT / Beijing Time, solving the confusion of KST/EST time differences for HK/Mainland users.
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">Direct links to actions</div>
+            <div class="feed-text">
+              Each entry links to relevant missions in the Fandom Hub and recommended items in Weverse Shop, improving cross-page navigation.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="help">
+  <div class="container">
+    <h2 class="section-title">Help Center · Quick Start</h2>
+    <p class="section-subtitle">
+      Simple guidance for new users in Hong Kong and Mainland China, including registration, payment and event participation.
+    </p>
+    <div class="card">
+      <div class="feed-item">
+        <div class="feed-title">How do I join the June campaign?</div>
+        <div class="feed-text">
+          Sign up or log in, then follow the “June campaign” entry on the homepage or Fandom Hub.
+          All related missions, events and shop items are tagged accordingly.
+        </div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-title">How do I switch language and region?</div>
+        <div class="feed-text">
+          Use the language toggle in the top-right and select your region in Settings.
+          The website automatically adjusts time formats and currency displays.
+        </div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-title">Payment & shipping</div>
+        <div class="feed-text">
+          We support major international payment methods and selected local options.
+          Shipping is available to Hong Kong and Mainland China with clear delivery estimates.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <span>Display banner example · June support campaign</span>
+      </div>
+      <div style="padding:12px 0;">
+        <div style="
+          width:100%;
+          height:120px;
+          border-radius:16px;
+          background: linear-gradient(135deg,#2d1b50,#0b1220);
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:16px 20px;
+        ">
+          <div>
+            <div style="font-size:12px;color:#9ae6ff;margin-bottom:4px;">Limited-time · June only</div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:6px;">
+              Join the “June Support Challenge”
+            </div>
+            <div style="font-size:12px;color:#e2e8f0;margin-bottom:10px;">
+              Complete missions in the Fandom Hub and get exclusive digital badges, plus special offers in Weverse Shop.
+            </div>
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;">Learn more</button>
+          </div>
+          <div style="font-size:11px;color:#a0aec0;text-align:right;">
+            Display banner mock-up for coursework only.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <div>© 2026 Weverse Digital Experience Concept Site · Coursework Prototype</div>
+      <div>This page is a student project mock-up and does not represent the official Weverse brand.</div>
+    </div>
+  </div>
+</footer>
+
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <div class="popup-close" onclick="document.getElementById('popup').style.display='none';">×</div>
+    <div class="popup-tag">June campaign highlight</div>
+    <div class="popup-title">Join the “June Support Challenge”</div>
+    <div class="popup-subtitle">
+      Take part in missions, voting and support projects throughout June and unlock exclusive badges and offers.
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:6px;">Join now</button>
+    <button class="btn btn-outline" style="width:100%;font-size:12px;">Maybe later</button>
+    <div class="popup-footer">
+      <span>Popup ad mock-up for coursework</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
